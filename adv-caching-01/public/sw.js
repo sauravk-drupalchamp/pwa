@@ -1,5 +1,5 @@
 
-var CACHE_STATIC_NAME = 'static-v1';
+var CACHE_STATIC_NAME = 'static';
 var CACHE_DYNAMIC_NAME = 'dynamic';
 
 self.addEventListener('install', function(event) {
@@ -11,6 +11,7 @@ self.addEventListener('install', function(event) {
         cache.addAll([
           '/',
           '/index.html',
+          '/offline.html',
           '/src/js/app.js',
           '/src/js/feed.js',
           '/src/js/promise.js',
@@ -54,12 +55,14 @@ self.addEventListener('fetch', function(event) {
             .then(function(res) {
               return caches.open(CACHE_DYNAMIC_NAME)
                 .then(function(cache) {
-                  // cache.put(event.request.url, res.clone()); -- Commented to respond to an event from any other JS file
+                  cache.put(event.request.url, res.clone());
                   return res;
                 })
             })
             .catch(function(err) {
-
+              return caches.open(CACHE_STATIC_NAME).then((cache)=>{
+                return cache.match('/offline.html');
+              })
             });
         }
       })
