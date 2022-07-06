@@ -1,5 +1,5 @@
 
-var CACHE_STATIC_NAME = 'static';
+var CACHE_STATIC_NAME = 'static-v1';
 var CACHE_DYNAMIC_NAME = 'dynamic';
 
 self.addEventListener('install', function(event) {
@@ -54,7 +54,7 @@ self.addEventListener('fetch', function(event) {
             .then(function(res) {
               return caches.open(CACHE_DYNAMIC_NAME)
                 .then(function(cache) {
-                  cache.put(event.request.url, res.clone());
+                  // cache.put(event.request.url, res.clone()); -- Commented to respond to an event from any other JS file
                   return res;
                 })
             })

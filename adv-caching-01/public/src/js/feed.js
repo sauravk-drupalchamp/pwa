@@ -31,7 +31,15 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
 function onSaveButtonClicked(event) {
-  console.log('clicked');
+  console.log('clicked Saved');
+  if('caches' in window){
+    caches.open('user-requested').then((cache)=>{
+      cache.addAll(['https://httpbin.org/get','/src/images/sf-boat.jpg'])
+    })
+  }else{
+    alert("Offline Acces not supported by Browser")
+  }
+  
 }
 
 function createCard() {
