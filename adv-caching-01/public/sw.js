@@ -26,15 +26,15 @@ self.addEventListener("install", function (event) {
   );
 });
 
-function trimCache(cacheName, maxItems){
-  caches.open(cacheName).then(function (cache){
-    return cache.keys().then(function (keys){
-      if(keys.length > maxItems){
-        cache.delete(key[0]).then(trimCache(cacheName, maxItems))
-      }
-    })
-  })
-}
+// function trimCache(cacheName, maxItems){
+//   caches.open(cacheName).then(function (cache){
+//     return cache.keys().then(function (keys){
+//       if(keys.length > maxItems){
+//         cache.delete(key[0]).then(trimCache(cacheName, maxItems))
+//       }
+//     })
+//   })
+// }
 
 function isInArray(string, array){
   for(var i =0; i<array.length; i++){
@@ -128,7 +128,7 @@ self.addEventListener('fetch', function (event) {
         .then(function (cache) {
           return fetch(event.request)
             .then(function (res) {
-              trimCache(CACHE_DYNAMIC_NAME,3);
+              // trimCache(CACHE_DYNAMIC_NAME,3);
               cache.put(event.request, res.clone());
               return res;
             });
@@ -149,6 +149,7 @@ self.addEventListener('fetch', function (event) {
               .then(function (res) {
                 return caches.open(CACHE_DYNAMIC_NAME)
                   .then(function (cache) {
+                    // trimCache(CACHE_DYNAMIC_NAME,3);
                     cache.put(event.request.url, res.clone());
                     return res;
                   })
