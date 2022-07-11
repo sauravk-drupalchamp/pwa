@@ -1,5 +1,5 @@
-var CACHE_STATIC_NAME = "static-v23";
-var CACHE_DYNAMIC_NAME = "dynamic-v23";
+var CACHE_STATIC_NAME = "static-v24";
+var CACHE_DYNAMIC_NAME = "dynamic-v24";
 var STATIC_FILES_NAME = [
   "/",
   "/index.html",
@@ -25,6 +25,25 @@ self.addEventListener("install", function (event) {
     })
   );
 });
+
+function trimCache(cacheName, maxItems){
+  caches.open(cacheName).then(function (cache){
+    return cache.keys().then(function (keys){
+      if(keys.length > maxItems){
+        cache.delete(key[0]).then(trimCache(cacheName, maxItems))
+      }
+    })
+  })
+}
+
+function isInArray(string, array){
+  for(var i =0; i<array.length; i++){
+    if(array[i] === string){
+      return true
+    }
+  }
+  return false;
+}
 
 self.addEventListener("activate", function (event) {
   console.log("[Service Worker] Activating Service Worker ....", event);
@@ -99,14 +118,6 @@ self.addEventListener("activate", function (event) {
 //   );
 // });
 
-function isInArray(string, array){
-  for(var i =0; i<array.length; i++){
-    if(array[i] === string){
-      return true
-    }
-  }
-  return false;
-}
 // CACHE THEN NETWORK STRATEGY With OFFLINE Support
 self.addEventListener('fetch', function (event) {
   var url = 'https://httpbin.org/get';
@@ -117,19 +128,17 @@ self.addEventListener('fetch', function (event) {
         .then(function (cache) {
           return fetch(event.request)
             .then(function (res) {
+              trimCache(CACHE_DYNAMIC_NAME,3);
               cache.put(event.request, res.clone());
               return res;
             });
         })
     );
-  } 
-  // // CACHE ONLY
-  else if (isInArray(event.request.url, STATIC_FILES_NAME)) {
+  } else if (isInArray(event.request.url, STATIC_FILES_NAME)) {
     event.respondWith(
       caches.match(event.request)
     );
-  } 
-  else {
+  } else {
     event.respondWith(
       caches.match(event.request)
         .then(function (response) {
@@ -147,7 +156,7 @@ self.addEventListener('fetch', function (event) {
               .catch(function (err) {
                 return caches.open(CACHE_STATIC_NAME)
                   .then(function (cache) {
-                    if(event.request.url.indexOf('/help')){
+                    if(event.request.headers.get('accept').includes('text/html')){ 
                       return cache.match('/offline.html');
                     }
                   });
@@ -157,3 +166,4 @@ self.addEventListener('fetch', function (event) {
     );
   }
 });
+// We can return fallback image or any other files too.
