@@ -1,5 +1,5 @@
-var CACHE_STATIC_NAME = "static-v22";
-var CACHE_DYNAMIC_NAME = "dynamic-v22";
+var CACHE_STATIC_NAME = "static-v23";
+var CACHE_DYNAMIC_NAME = "dynamic-v23";
 var STATIC_FILES_NAME = [
   "/",
   "/index.html",
@@ -99,6 +99,14 @@ self.addEventListener("activate", function (event) {
 //   );
 // });
 
+function isInArray(string, array){
+  for(var i =0; i<array.length; i++){
+    if(array[i] === string){
+      return true
+    }
+  }
+  return false;
+}
 // CACHE THEN NETWORK STRATEGY With OFFLINE Support
 self.addEventListener('fetch', function (event) {
   var url = 'https://httpbin.org/get';
@@ -115,12 +123,12 @@ self.addEventListener('fetch', function (event) {
         })
     );
   } 
-  // CACHE ONLY
-  // else if (new RegExp('\\b' + STATIC_FILES_NAME.join('\\b|\\b') + '\\b').test(event.request.url)) {
-  //   event.respondWith(
-  //     caches.match(event.request)
-  //   );
-  // } 
+  // // CACHE ONLY
+  else if (isInArray(event.request.url, STATIC_FILES_NAME)) {
+    event.respondWith(
+      caches.match(event.request)
+    );
+  } 
   else {
     event.respondWith(
       caches.match(event.request)
