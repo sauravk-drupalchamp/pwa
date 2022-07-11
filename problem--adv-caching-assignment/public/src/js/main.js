@@ -1,33 +1,50 @@
+var box = document.querySelector(".box");
+var button = document.querySelector("button");
 
-var box = document.querySelector('.box');
-var button = document.querySelector('button');
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/sw.js')
-    .then(function() {
-      console.log('Registered Service Worker!');
-    });
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").then(function () {
+    console.log("Registered Service Worker!");
+  });
 }
 
-button.addEventListener('click', function(event) {
-  if (box.classList.contains('visible')) {
-    box.classList.remove('visible');
+button.addEventListener("click", function (event) {
+  if (box.classList.contains("visible")) {
+    box.classList.remove("visible");
   } else {
-    box.classList.add('visible');
+    box.classList.add("visible");
   }
 });
 
-fetch('https://httpbin.org/ip')
-  .then(function(res) {
+var url = "https://httpbin.org/ip";
+var networkResponseReceived = false;
+fetch(url)
+  .then(function (res) {
     return res.json();
   })
-  .then(function(data) {
-    console.log(data.origin);
-    box.style.height = (data.origin.substr(0, 2) * 5) + 'px';
+  .then(function (data) {
+    networkResponseReceived = true;
+    console.log("FROM NETWORK",data.origin);
+    box.style.height = data.origin.substr(0, 2) * 5 + "px";
   });
 
+if (caches in window) {
+  caches
+    .match(url)
+    .then(function (res) {
+      if (res) {
+        return res.json();
+      }
+    })
+    .then(function (data) {
+      console.log("FROM CACHE", data);
+      if (!networkResponseReceived) {
+        box.style.height = data.origin.substr(0, 2) * 20 + "px";
+      }
+    });
+}
+
 // 1) Identify the strategy we currently use in the Service Worker (for caching)
+// == Its cache fallback to network with dynamic caching
 // 2) Replace it with a "Network only" strategy => Clear Storage (in Dev Tools), reload & try using your app offline
 // 3) Replace it with a "Cache only" strategy => Clear Storage (in Dev Tools), reload & try using your app offline
 // 4) Replace it with "Network, cache fallback" strategy =>  => Clear Storage (in Dev Tools), reload & try using your app offline
