@@ -1,8 +1,8 @@
 // Imported IDB file and Added To static Cache
 importScripts('/src/js/idb.js')
 importScripts('src/js/utility.js')
-var CACHE_STATIC_NAME = 'static-v20';
-var CACHE_DYNAMIC_NAME = 'dynamic-v20';
+var CACHE_STATIC_NAME = 'static-v23';
+var CACHE_DYNAMIC_NAME = 'dynamic-v23';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -90,7 +90,7 @@ self.addEventListener('fetch', function (event) {
           var clonedResponse = res.clone();
           clonedResponse.json().then(function(data){
             for(var key in data){
-              writeData(('posts', data[key]))
+              writeData('posts', data[key])
             }
           })
           return res; 
