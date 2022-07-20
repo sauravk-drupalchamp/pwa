@@ -24,13 +24,25 @@ window.addEventListener('beforeinstallprompt', function(event) {
   return false;
 });
 
+// INITIAL NOTIFICATIONS SETUP
+function displayConfirmNotification(){
+  var options = {
+    body: 'You successfully subscribed to our notifiaction service.'
+  }
+  console.log(options)
+  new Notification('Sucessfully Subscribed !!',options);
+  console.log("displayConfirmNotification")
+}
+
 function askForNotificationPermission() {
   Notification.requestPermission(function(result) {
-    console.log('User Choice', result);
+    console.log(result);
     if (result !== 'granted') {
       console.log('No notification permission granted!');
     } else {
-
+      // enableNotificationsButtons.css("display","none");
+      displayConfirmNotification();
+      console.log('User Choice', result);
     }
   });
 }
