@@ -25,13 +25,16 @@ window.addEventListener('beforeinstallprompt', function(event) {
 });
 
 // INITIAL NOTIFICATIONS SETUP
+
 function displayConfirmNotification(){
   var options = {
     body: 'You successfully subscribed to our notifiaction service.'
   }
-  console.log(options)
-  new Notification('Sucessfully Subscribed !!',options);
-  console.log("displayConfirmNotification")
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(function(swReg){
+      swReg.showNotification('Sucessfully Subscribed [SW]',options)
+    })
+  }
 }
 
 function askForNotificationPermission() {
