@@ -34,9 +34,11 @@ function displayConfirmNotification(){
     dir: 'ltr',
     lang: 'en-US', // BCP 47
     vibrate: [100,50,200],
-    badge: '/src/images/icons/app-icon-96x96.png'
+    badge: '/src/images/icons/app-icon-96x96.png',
+    tag: 'confirm-notifications',
+    renotify: true,
   }
-  
+
   if('serviceWorker' in navigator){
     navigator.serviceWorker.ready.then(function(swReg){
       swReg.showNotification('Sucessfully Subscribed [SW]',options)
