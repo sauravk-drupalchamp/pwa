@@ -40,11 +40,15 @@ function displayConfirmNotification(){
     actions: [{action: "confirm", title: "Okay", icon: '/src/images/icons/app-icon-96x96.png' },
               {action: "cancel", title: "Cancel", icon: '/src/images/icons/app-icon-96x96.png' }]
   }
-
-  if('serviceWorker' in navigator){
     navigator.serviceWorker.ready.then(function(swReg){
       swReg.showNotification('Sucessfully Subscribed [SW]',options)
     })
+}
+function configurePushSub(){
+  if(!(serviceWorker in navigator)){
+    return;
+  }else{
+
   }
 }
 
@@ -54,14 +58,15 @@ function askForNotificationPermission() {
     if (result !== 'granted') {
       console.log('No notification permission granted!');
     } else {
-      // enableNotificationsButtons.css("display","none");
-      displayConfirmNotification();
+      // enableNotificationsButtons[i].style.display = 'none';
+        configurePushSub();
+      // displayConfirmNotification();
       console.log('User Choice', result);
     }
   });
 }
 
-if ('Notification' in window) {
+if ('Notification' in window && serviceWorker in navigator) {
   for (var i = 0; i < enableNotificationsButtons.length; i++) {
     enableNotificationsButtons[i].style.display = 'inline-block';
     enableNotificationsButtons[i].addEventListener('click', askForNotificationPermission);
