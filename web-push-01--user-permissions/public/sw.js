@@ -235,7 +235,7 @@ self.addEventListener("notificationclick", function (event) {
           var client = clis.find(function(c){
             return c.visibilityState === 'visible';
           });
-          if(client !== undefined){
+          if(client !== undefined){ 
             client.navigate(notification.data.url)
             client.focus();
           }else{
