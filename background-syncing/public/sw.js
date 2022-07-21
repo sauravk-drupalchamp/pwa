@@ -178,7 +178,7 @@ self.addEventListener("fetch", function (event) {
 
 self.addEventListener("sync", function (event) {
   console.log("[Service Worker] Background Syncing", event);
-  if (event.tag === "sync-new-posts") { 
+  if (event.tag === "sync-new-posts") {
     console.log("[Service Worker] Syncing new Post");
     event.waitUntil(
       readAllData("sync-posts").then(function (data) {
@@ -192,21 +192,23 @@ self.addEventListener("sync", function (event) {
                 "Accept": "application/json",
               },
               body: JSON.stringify({
-                "id": dt.id,
-                "title": dt.title,
-                "location": dt.location,
-                "image":
+                id: dt.id,
+                title: dt.title,
+                location: dt.location,
+                image:
                   "https://firebasestorage.googleapis.com/v0/b/pwagram-f9e3c.appspot.com/o/pexels-nat%C3%A1lia-ivankov%C3%A1-360698.jpg?alt=media&token=8145c7fe-02b8-418f-8fc4-d67142f3f341",
               }),
             }
-          ).then(function (res) {
-            console.log("Sent Data Through Background Sync ====>", res);
-            if(res.ok){
-              deleteItemFromData('sync-posts',dt.id)
-            }
-          }).catch(function(err){
-            console.log(err)
-          })
+          )
+            .then(function (res) {
+              console.log("Sent Data Through Background Sync ====>", res);
+              if (res.ok) {
+                deleteItemFromData("sync-posts", dt.id);
+              }
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
         }
       })
     );
