@@ -229,7 +229,22 @@ self.addEventListener("notificationclick", function (event) {
   
   if (action === "confirm") {
     console.log("Confirm was Chosen");
-    notification.close();
+    event.waitUntil(
+      clients.matchAll()
+        .then(function(clis){
+          var client = clis.find(function(c){
+            return c.visibilityState === 'visible';
+          });
+          if(client !== undefined){
+            client.navigate('http://localhots:8080')
+            client.focus();
+          }else{
+            clients.openWindow('http://localhots:8080')
+          }
+          notification.close();
+        })
+    )
+    
   } else {
     console.log(action);
   }
