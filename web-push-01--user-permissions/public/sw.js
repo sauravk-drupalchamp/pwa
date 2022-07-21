@@ -236,10 +236,10 @@ self.addEventListener("notificationclick", function (event) {
             return c.visibilityState === 'visible';
           });
           if(client !== undefined){
-            client.navigate('http://localhots:8080')
+            client.navigate(notification.data.url)
             client.focus();
           }else{
-            clients.openWindow('http://localhots:8080')
+            clients.openWindow(notification.data.url)
           }
           notification.close();
         })
@@ -258,7 +258,8 @@ self.addEventListener('push', function(event){
   console.log('Push notification received', event)
   var data = {
     title: 'New',
-    content: 'Something New Happened'
+    content: 'Something New Happened',
+    openUrl: '/'
   }
   if(event.data){
     data = JSON.parse(event.data.text())
@@ -266,7 +267,10 @@ self.addEventListener('push', function(event){
   var options = {
     body: data.content,
     icon: '/src/images/icons/app-icon-96x96.png',
-    badge: '/src/images/icons/app-icon-96x96.png'
+    badge: '/src/images/icons/app-icon-96x96.png',
+    data: {
+      url: data.openUrl
+    }
   }
   event.waitUntil(self.registration.showNotifications(data.title, options));
 })
