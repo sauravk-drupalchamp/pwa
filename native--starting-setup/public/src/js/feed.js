@@ -97,7 +97,7 @@ function updateUI(data) {
   }
 }
 
-var url = 'https://pwagram-99adf.firebaseio.com/posts.json';
+var url = 'https://pwagram-f9e3c-default-rtdb.firebaseio.com/posts.json';
 var networkDataReceived = false;
 
 fetch(url)
@@ -125,7 +125,7 @@ if ('indexedDB' in window) {
 }
 
 function sendData() {
-  fetch('https://us-central1-pwagram-99adf.cloudfunctions.net/storePostData', {
+  fetch('https://pwagram-f9e3c-default-rtdb.firebaseio.com/posts.json', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ function sendData() {
       id: new Date().toISOString(),
       title: titleInput.value,
       location: locationInput.value,
-      image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-99adf.appspot.com/o/sf-boat.jpg?alt=media&token=19f4770c-fc8c-4882-92f1-62000ff06f16'
+      image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-f9e3c.appspot.com/o/pexels-nat%C3%A1lia-ivankov%C3%A1-360698.jpg?alt=media&token=8145c7fe-02b8-418f-8fc4-d67142f3f341'
     })
   })
     .then(function(res) {

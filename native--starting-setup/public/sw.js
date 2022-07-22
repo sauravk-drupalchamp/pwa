@@ -1,8 +1,8 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v28';
-var CACHE_DYNAMIC_NAME = 'dynamic-v2';
+var CACHE_STATIC_NAME = 'static-v31';
+var CACHE_DYNAMIC_NAME = 'dynamic-v31';
 var STATIC_FILES = [
   '/',
   '/index.html',
@@ -74,7 +74,7 @@ function isInArray(string, array) {
 
 self.addEventListener('fetch', function (event) {
 
-  var url = 'https://pwagram-99adf.firebaseio.com/posts';
+  var url = 'https://pwagram-f9e3c-default-rtdb.firebaseio.com/posts.json';
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(fetch(event.request)
       .then(function (res) {
@@ -189,7 +189,7 @@ self.addEventListener('sync', function(event) {
       readAllData('sync-posts')
         .then(function(data) {
           for (var dt of data) {
-            fetch('https://us-central1-pwagram-99adf.cloudfunctions.net/storePostData', {
+            fetch('https://pwagram-f9e3c-default-rtdb.firebaseio.com/posts.json', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
