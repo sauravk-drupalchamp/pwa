@@ -30,6 +30,15 @@ function initializeMedia(){
       });
     }
   }
+
+  navigator.mediaDevices.getUserMedia({video: true})
+  .then(function(stream){
+    videoPlayer.srcObject = stream;
+    videoPlayer.style.display = 'block';
+  }).catch((err)=>{
+    console.log("Erro",err);
+    imagePicker.style.display = 'block';
+  })
   
 }
 
@@ -67,6 +76,9 @@ function openCreatePostModal() {
 
 function closeCreatePostModal() {
   createPostArea.style.transform = 'translateY(100vh)';
+  imagePickerArea.display.style = 'none';
+  videoPlayer.style.display = 'none';
+  canvasElement.style.display = 'none'
   // createPostArea.style.display = 'none';
 }
 
