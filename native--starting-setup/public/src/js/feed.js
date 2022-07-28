@@ -11,10 +11,33 @@ var captureButton = document.querySelector('#capture-btn');
 var imagePicker = document.querySelector('#image-picker');
 var imagePickerArea = document.querySelector('#pick-image');
 
+function initializeMedia(){
+  // mediaDevices is the API that give us access to media Devices
+  if(!('mediaDevices' in navigator)){
+    navigator.mediaDevices = {};
+  }
+
+  if(!('getUserMedia' in navigator.mediaDevices )){
+    // SAFARI WEBKIT
+    navigator.mediaDevices.getUserMedia = function(constraints){
+      var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+      if(!getUserMedia){
+        return Promise.reject(new ('getUserMedia is not Implemented'));
+      }
+      return new Promise(function(resolve, reject){
+        getUserMedia.call(navigator, constraints, resolve, reject);
+      });
+    }
+  }
+  
+}
+
 function openCreatePostModal() {
   // createPostArea.style.display = 'block';
   // setTimeout(function() {
     createPostArea.style.transform = 'translateY(0)';
+    initializeMedia()
   // }, 1);
   if (deferredPrompt) {
     deferredPrompt.prompt();
