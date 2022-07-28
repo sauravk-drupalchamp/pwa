@@ -10,6 +10,7 @@ var canvasElement = document.querySelector('#canvas');
 var captureButton = document.querySelector('#capture-btn');
 var imagePicker = document.querySelector('#image-picker');
 var imagePickerArea = document.querySelector('#pick-image');
+var picture;
 
 function initializeMedia(){
   // mediaDevices is the API that give us access to media Devices
@@ -53,6 +54,8 @@ captureButton.addEventListener('click', function(event){
   videoPlayer.srcObject.getVideoTracks().forEach(element => {
       element.stop();
   });
+
+  picture = dataURItoBlob(canvasElement.toDataUrl());
 })
 
 function openCreatePostModal() {
@@ -178,18 +181,15 @@ if ('indexedDB' in window) {
 }
 
 function sendData() {
+  var id = new Date().toISOString()
+  var postData = new FormData();
+  postData.append('id', id);
+  postData.append('title', titleInput.value);
+  postData.append('location', locationInput.value);
+  postData.append('file', picture, id + '.png');
   fetch('https://pwagram-f9e3c-default-rtdb.firebaseio.com/posts.json', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      id: new Date().toISOString(),
-      title: titleInput.value,
-      location: locationInput.value,
-      image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-f9e3c.appspot.com/o/pexels-nat%C3%A1lia-ivankov%C3%A1-360698.jpg?alt=media&token=8145c7fe-02b8-418f-8fc4-d67142f3f341'
-    })
+    body: postData
   })
     .then(function(res) {
       console.log('Sent data', res);
@@ -213,7 +213,8 @@ form.addEventListener('submit', function(event) {
         var post = {
           id: new Date().toISOString(),
           title: titleInput.value,
-          location: locationInput.value
+          location: locationInput.value,
+          picture: picture
         };
         writeData('sync-posts', post)
           .then(function() {
